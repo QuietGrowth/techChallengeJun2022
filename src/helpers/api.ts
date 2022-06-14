@@ -3,7 +3,7 @@ import { Error, RepoListResponse } from '../types'
 const axios = require('axios')
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN
 
-export const getRepoList = async (searchTopic = 'react', first = 10) => {
+export const getRepoList = async (searchTopic = 'react', first = 100) => {
   return axios
     .post(
       API_URL,
