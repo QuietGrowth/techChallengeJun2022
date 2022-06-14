@@ -15,24 +15,30 @@ import { Edges } from '../types'
 import RepoName from '../components/RepoName'
 import ForkCount from '../components/ForkCount'
 import StarsCount from '../components/StarsCount'
+import Search from '../components/Search'
 
 function Repo() {
   const mounted = useRef(false)
   const [isFetchingRepo, setFetchingRepo] = useState(true)
   const [repoList, setRepoList] = useState([])
-  const [searchTopic, setSearchTopic] = useState('react')
+  const [searchTopic, setSearchTopic] = useState<string>('react')
 
-  const fetchRepoList = useCallback(async () => {
+  const fetchRepoList = useCallback(async (_searchTerm: string) => {
     setFetchingRepo(true)
-    const res = await getRepoList(searchTopic)
+    const res = await getRepoList(_searchTerm)
     setRepoList(res)
     setFetchingRepo(false)
-  }, [searchTopic])
+  }, [])
+
+  const handleClickSearch = async (_searchString: string) => {
+    setSearchTopic(_searchString)
+    fetchRepoList(_searchString)
+  }
 
   useEffect(() => {
     mounted.current = true
 
-    fetchRepoList()
+    fetchRepoList(searchTopic)
 
     return () => {
       mounted.current = false
@@ -45,6 +51,8 @@ function Repo() {
       <CssBaseline />
       <Container maxWidth="sm">
         <Box sx={{ height: '100vh', padding: 10 }}>
+          <Search searchTopic={searchTopic} handleClickSearch={handleClickSearch} />
+          <br />
           <TableContainer component={Paper}>
             <Table sx={{ maxWidth: 650 }} aria-label="simple table">
               <TableBody>
